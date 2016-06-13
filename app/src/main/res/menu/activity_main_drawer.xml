@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_inicio"
+        android:icon="@drawable/ic_domain_white_48dp"
+        android:title="Inicio" />
+
+    <item
+        android:id="@+id/nav_productos"
+        android:icon="@drawable/ic_laptop_white_48dp"
+        android:title="Productos" />
+    <item
+        android:id="@+id/nav_guias"
+        android:icon="@drawable/ic_content_paste_white_48dp"
+        android:title="Guias" />
+
+    <!--<group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_productos"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Productos" />
+        <item
+            android:id="@+id/nav_guias"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Guias" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Slideshow" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>-->
+    <item android:title="Opciones">
+        <menu>
+            <item
+                android:id="@+id/nav_salir"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Salir" />
+        </menu>
+    </item>
+
+</menu>
