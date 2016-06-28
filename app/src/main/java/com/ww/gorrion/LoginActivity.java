@@ -4,35 +4,32 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.ww.gorrion.common.Global;
+import com.ww.gorrion.common.HttpUtil;
+import com.ww.gorrion.common.SessionManager;
+import com.ww.gorrion.common.Util;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
-    // UI references.
     private EditText mUsuarioView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -55,7 +52,7 @@ public class LoginActivity extends Activity {
         });
 
         Button btnLogin = (Button) findViewById(R.id.sign_in_button);
-        btnLogin.setOnClickListener(new OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -65,15 +62,7 @@ public class LoginActivity extends Activity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        //showProgress(true);
         manager = new SessionManager();
-        String status = manager.getPreferences(LoginActivity.this, "status");
-        if(status.equals("1")){
-            String usuario = manager.getPreferences(LoginActivity.this, "usuario");
-            String password = manager.getPreferences(LoginActivity.this, "password");
-            login(usuario, password);
-        }
-        //showProgress(false);
     }
 
     private void attemptLogin() {
@@ -104,30 +93,19 @@ public class LoginActivity extends Activity {
     }
 
     private void login(final String usuario, final String password){
-        RequestParams params = new RequestParams();
-        params.put("txt_usuario", usuario);
-        params.put("txt_contrasena", password);
         showProgress(true, true);
-        HttpUtil.post(Global.URL_LOGIN, params, new JsonHttpResponseHandler() {
+        HttpUtil.setUsuario(usuario, password);
+        HttpUtil.get(Global.URL_TOKEN, new AsyncHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                showProgress(false, true);
                 try {
-                    String data = response.getString("data");
-                    if(data.equals("443")){
-                        showProgress(false, true);
-                        mPasswordView.setError(getString(R.string.error_incorrect_password));
-                        mPasswordView.requestFocus();
-                    }else if(data.equals("true")){
-                        showProgress(false, false);
-                        manager.setPreferences(LoginActivity.this, "status", "1");
-                        manager.setPreferences(LoginActivity.this, "usuario", usuario);
-                        manager.setPreferences(LoginActivity.this, "password", password);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        //intent.putExtra(Global.LABEL_USUARIO, "USUARIO LOGEADO");
-                        startActivity(intent);
-                        overridePendingTransition(R.animator.enter, R.animator.exit);
-                        finish();
-                    }
+                    JSONObject data = Util.getJson(response);
+                    String token = data.getString("token");
+                    manager.setToken(LoginActivity.this, token);
+                    Intent intent = new Intent(LoginActivity.this, LauncherActivity.class);
+                    startActivity(intent);
+                    finish();
                 } catch (JSONException e) {
                     mPasswordView.setError(getString(R.string.error_desconocida));
                     mPasswordView.requestFocus();
@@ -135,7 +113,20 @@ public class LoginActivity extends Activity {
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray timeline) {}
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                showProgress(false, true);
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                builder
+                        .setMessage("Usuario/Clave incorrecto")
+                        .setPositiveButton("Aceptar",  new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                mPasswordView.setError(getString(R.string.error_desconocida));
+                                mPasswordView.requestFocus();
+                            }
+                        })
+                        .show();
+            }
         });
     }
 
@@ -168,6 +159,4 @@ public class LoginActivity extends Activity {
             }
         }
     }
-
 }
-

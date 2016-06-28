@@ -1,11 +1,10 @@
 <resources>
-    <string name="app_name">Gorrion [Beta]</string>
-    <string name="title_activity_login">Sparrow => Login</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Gorrion [BETA]</string>
+    <string name="title_activity_login">Acceso [BETA]</string>
+    <string name="title_activity_producto">Productos [BETA]</string>
+    <string name="title_activity_producto_resultado">Resultado [BETA]</string>
+    <string name="title_activity_guia">Guias [BETA]</string>
+    <string name="title_activity_contacto">Contactos [BETA]</string>
 
     <string name="prompt_usuario">Usuario</string>
     <string name="prompt_password">Clave</string>
@@ -15,11 +14,13 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">Usuario o clave incorrecta</string>
     <string name="error_field_required">Este campo es requerido</string>
-    <string name="error_desconocida">Error desconocido</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_desconocida">Ha ocurrido un error</string>
+    <string name="lbl_buscar">BUSCAR</string>
+    <string name="lbl_nuevo">Nueva Busqueda</string>
+    <string name="lbl_limpiar">LIMPIAR</string>
+    <string name="lbl_cerrar_sesion">Cerrar Sesión?</string>
+    <string name="lbl_si">Si</string>
+    <string name="lbl_no">No</string>
 
     <string-array name="cia_array">
         <item>Winware</item>
