@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,6 +33,9 @@ public class LauncherActivity extends AppCompatActivity implements ListView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         gvDash = (GridView) findViewById(R.id.gvDash);
         gvDash.setAdapter(new LauncherAdapter(this, ICONS));
@@ -52,6 +56,7 @@ public class LauncherActivity extends AppCompatActivity implements ListView.OnIt
                 break;
             case LauncherIcon.LAUNCHER_CONTACTO:
                 i = new Intent(this, ContactoActivity.class);
+                i.putExtra("back", false);
                 break;
             case LauncherIcon.LAUNCHER_CERRAR:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -76,6 +81,7 @@ public class LauncherActivity extends AppCompatActivity implements ListView.OnIt
         }
         if(i!=null) {
             startActivity(i);
+            Util.entrar(this);
         }
     }
 }

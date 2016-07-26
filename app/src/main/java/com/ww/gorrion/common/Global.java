@@ -15,6 +15,8 @@ public class Global {
     public static final String URL_CONTACTO;
     public static final String URL_CONTACTO_LISTAR;
     public static final String URL_GUIA_LISTAR;
+    public static final String URL_GUIA_TIPO_LISTAR;
+    public static final String URL_GUIA_RESUMEN;
 
     //public static String LABEL_USUARIO = "LABEL_USUARIO";
     //public static String LABEL_PRODUCTO = "LABEL_PRODUCTO";
@@ -37,6 +39,8 @@ public class Global {
         URL_CONTACTO = HOST.concat("contacto/{id}");
         URL_CONTACTO_LISTAR = HOST.concat("contacto/listar/{nombreContacto}");
         //
-        URL_GUIA_LISTAR = HOST.concat("guia/listar/{ciaId}/{contactoId}/{numero}");
+        URL_GUIA_LISTAR = HOST.concat("guia/listar/{ciaId}/{contactoId}/{numeroGuia}/{pagina}");
+        URL_GUIA_TIPO_LISTAR = HOST.concat("guia/tipo/listar");
+        URL_GUIA_RESUMEN = HOST.concat("guia/detalle/resumen/{guiaId}");
     }
 }

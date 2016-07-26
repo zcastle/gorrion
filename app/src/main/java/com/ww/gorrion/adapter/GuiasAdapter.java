@@ -13,12 +13,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ProductosAdapter extends BaseAdapter {
+public class GuiasAdapter extends BaseAdapter {
 
     private Context context;
     private JSONArray lista;
 
-    public ProductosAdapter(Context context, JSONArray lista){
+    public GuiasAdapter(Context context, JSONArray lista){
         this.context = context;
         this.lista = lista;
     }
@@ -43,23 +43,32 @@ public class ProductosAdapter extends BaseAdapter {
         return position;
     }
 
+    public void addItem(JSONObject item){
+        lista.put(item);
+    }
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         if (view == null) {
             LayoutInflater inflater  = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.listview_productos_item, null);
+            view = inflater.inflate(R.layout.listview_guias_item, null);
         }
 
         JSONObject row = getItem(position);
 
-        TextView lblSerie = (TextView) view.findViewById(R.id.lblSerie);
-        TextView lblFamilia = (TextView) view.findViewById(R.id.lblFamilia);
-        TextView lblTipo = (TextView) view.findViewById(R.id.lblTipo);
+        TextView lblGuiaFecha = (TextView) view.findViewById(R.id.lblGuiaFecha);
+        TextView lblGuiaNumero = (TextView) view.findViewById(R.id.lblGuiaNumero);
+        TextView lblGuiaContacto = (TextView) view.findViewById(R.id.lblGuiaContacto);
+        TextView lblGuiaTipo = (TextView) view.findViewById(R.id.lblGuiaTipo);
 
         try {
-            lblSerie.setText(row.getString("serie"));
-            lblFamilia.setText(row.getString("familia"));
-            lblTipo.setText(row.getString("tipo"));
+            lblGuiaFecha.setText(row.getString("fecha"));
+            lblGuiaNumero.setText(row.getString("numero"));
+            if(row.getString("anulado").equals("S")){
+                lblGuiaNumero.setText(row.getString("numero").concat("(A)"));
+            }
+            lblGuiaContacto.setText(row.getString("contacto"));
+            lblGuiaTipo.setText(row.getString("tipo"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

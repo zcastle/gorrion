@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                     Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
                     startActivity(intent);
+                    Util.entrar(MainActivity.this);
                     finish();
                 }
 

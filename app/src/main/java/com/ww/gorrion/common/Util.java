@@ -31,6 +31,7 @@ public class Util {
     public static void showLoginview(Activity activity){
         Intent intent = new Intent(activity, LoginActivity.class);
         activity.startActivity(intent);
+        Util.entrar(activity);
         activity.finish();
     }
 
@@ -70,5 +71,13 @@ public class Util {
 
     public static final JSONObject getJson(byte[] response) throws JSONException {
         return new JSONObject(getString(response));
+    }
+
+    public static final void entrar(Activity activity){
+        activity.overridePendingTransition(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
+    }
+
+    public static final void salir(Activity activity){
+        activity.overridePendingTransition(R.animator.anim_slide_in_right, R.animator.anim_slide_out_right);
     }
 }

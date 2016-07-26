@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:text="ALIAS"
         android:id="@+id/lblContactoAlias"
-        android:textSize="18dp"
-        android:textIsSelectable="false" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:layout_width="match_parent"
@@ -19,6 +18,6 @@
         android:text="RAZON"
         android:id="@+id/lblContactoRazon"
         android:layout_below="@id/lblContactoAlias"
-        android:textSize="14dp" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

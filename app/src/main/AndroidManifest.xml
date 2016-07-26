@@ -14,15 +14,26 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".LauncherActivity" />
-        <activity android:name=".ProductoActivity" android:label="@string/title_activity_producto" />
-        <activity android:name=".ProductoResultadoActivity"  android:label="@string/title_activity_producto_resultado" />
-        <activity android:name=".ContactoActivity" android:label="@string/title_activity_contacto" />
-        <activity android:name=".GuiaActivity" android:label="@string/title_activity_guia" />
+        <activity
+            android:name=".ProductoActivity"
+            android:label="@string/title_activity_producto" />
+        <activity
+            android:name=".ProductoResultadoActivity"
+            android:label="@string/title_activity_producto_resultado" />
+        <activity
+            android:name=".ContactoActivity"
+            android:label="@string/title_activity_contacto" />
+        <activity
+            android:name=".GuiaActivity"
+            android:label="@string/title_activity_guia" />
+        <activity android:name=".GuiaResumenActivity" />
+        <activity android:name=".ContactoResultadoActivity"></activity>
     </application>
 
 </manifest>

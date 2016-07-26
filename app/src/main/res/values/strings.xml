@@ -17,10 +17,13 @@
     <string name="error_desconocida">Ha ocurrido un error</string>
     <string name="lbl_buscar">BUSCAR</string>
     <string name="lbl_nuevo">Nueva Busqueda</string>
-    <string name="lbl_limpiar">LIMPIAR</string>
+    <string name="lbl_buscar_contacto">Buscar Contacto</string>
+    <string name="lbl_limpiar">Limpiar</string>
     <string name="lbl_cerrar_sesion">Cerrar Sesión?</string>
     <string name="lbl_si">Si</string>
     <string name="lbl_no">No</string>
+    <string name="lbl_cargando">Cargando</string>
+    <string name="lbl_mapa">MAPA</string>
 
     <string-array name="cia_array">
         <item>Winware</item>

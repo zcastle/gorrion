@@ -145,16 +145,9 @@ public class ProductoResultadoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        overridePendingTransition(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
-
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        this.overridePendingTransition(R.animator.anim_slide_in_right, R.animator.anim_slide_out_right);
+        Util.salir(this);
         finish();
     }
 }

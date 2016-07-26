@@ -2,11 +2,13 @@ package com.ww.gorrion;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,17 +33,19 @@ import cz.msebera.android.httpclient.Header;
 public class ContactoActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener {
 
     private EditText txtBuscarContacto;
-    private ProgressDialog mDialog;
     private ListView lvResultadoContacto;
+    private View footerView;
+    private Button btnBuscarContacto;
+    private boolean back = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (savedInstanceState == null) {
-            overridePendingTransition(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
-        }
+
+        back = getIntent().getBooleanExtra("back", false);
+
 
         txtBuscarContacto = (EditText) findViewById(R.id.txtBuscarContacto);
         txtBuscarContacto.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -51,9 +55,10 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
                 return false;
             }
         });
-        Button btnBuscarContacto = (Button) findViewById(R.id.btnBuscarContacto);
+        btnBuscarContacto = (Button) findViewById(R.id.btnBuscarContacto);
         btnBuscarContacto.setOnClickListener(this);
         lvResultadoContacto = (ListView) findViewById(R.id.lvResultadoContacto);
+        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_guias_footer, null, false);
         lvResultadoContacto.setOnItemClickListener(this);
     }
 
@@ -64,18 +69,14 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Debe imgresar un nombre", Toast.LENGTH_SHORT).show();
             lvResultadoContacto.setAdapter(null);
         }else{
+            btnBuscarContacto.setEnabled(false);
+            lvResultadoContacto.addFooterView(footerView, null, false);
+            lvResultadoContacto.setAdapter(null);
             Util.hideKeyboard(txtBuscarContacto);
-            mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Buscando...");
-            if(!mDialog.isShowing()){
-                mDialog.show();
-            }
             HttpUtil.get(Global.URL_CONTACTO_LISTAR.replace("{nombreContacto}", buscar), new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                    if (mDialog.isShowing()) {
-                        mDialog.dismiss();
-                    }
+                    btnBuscarContacto.setEnabled(true);
                     try {
                         JSONObject objResponse = Util.getJson(response);
                         JSONArray data = objResponse.getJSONArray("data");
@@ -83,6 +84,7 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(ContactoActivity.this, objResponse.getString("message"), Toast.LENGTH_LONG).show();
                         }else if(data.length()>=1) {
                             lvResultadoContacto.setAdapter(new ContactosAdapter(ContactoActivity.this, data));
+                            lvResultadoContacto.removeFooterView(footerView);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -91,9 +93,6 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                    if (mDialog.isShowing()) {
-                        mDialog.dismiss();
-                    }
                     Util.showLoginview(ContactoActivity.this);
                 }
             });
@@ -110,18 +109,19 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Object json = parent.getItemAtPosition(position);
-        Log.e("json.toString()", json.toString());
+        //Log.e("json.toString()", json.toString());
 
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", json.toString());
-        setResult(Activity.RESULT_OK, returnIntent);
-        onBackPressed();
-        /*
-        Intent intent = new Intent(this, ProductoResultadoActivity.class);
-        intent.putExtra("id", json);
-        startActivity(intent);
-        overridePendingTransition(R.animator.enter, R.animator.exit);
-         */
+        if(back) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result", json.toString());
+            setResult(Activity.RESULT_OK, returnIntent);
+            onBackPressed();
+        }else{
+            Intent i = new Intent(this, ContactoResultadoActivity.class);
+            i.putExtra("data", json.toString());
+            startActivity(i);
+            Util.entrar(this);
+        }
     }
 
     @Override
@@ -137,8 +137,7 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.animator.anim_slide_in_right, R.animator.anim_slide_out_right);
+        Util.salir(this);
         finish();
     }
-
 }

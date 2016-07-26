@@ -2,24 +2,30 @@ package com.ww.gorrion;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.ww.gorrion.adapter.ContactosAdapter;
+import com.ww.gorrion.adapter.GuiasAdapter;
 import com.ww.gorrion.common.Global;
 import com.ww.gorrion.common.HttpUtil;
 import com.ww.gorrion.common.Util;
@@ -30,77 +36,132 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class GuiaActivity extends AppCompatActivity implements View.OnClickListener {
+public class GuiaActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener {
 
     private EditText txtNumeroGuia;
     private TextView txtContacto;
     private Spinner spinner;
+    private GuiasAdapter mGuiasAdapter = null;
+    private ListView lvGuiasProductos;
+    private View footerView;
     private JSONObject objContacto = null;
-    private ProgressDialog mDialog;
+    //private ProgressDialog mDialog;
+    private Button btnBuscarGuia;
+    private int pagina = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guia);
-        if (savedInstanceState == null) {
-            overridePendingTransition(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         txtNumeroGuia = (EditText) findViewById(R.id.txtNumeroGuia);
         txtContacto = (TextView) findViewById(R.id.txtContacto);
         spinner = (Spinner) findViewById(R.id.spCia);
+        lvGuiasProductos = (ListView) findViewById(R.id.lvGuiasProductos);
+        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_guias_footer, null, false);
+        lvGuiasProductos.setAdapter(null);
+        lvGuiasProductos.setOnItemClickListener(this);
+        lvGuiasProductos.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView arg0, int arg1) {}
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                if(lvGuiasProductos.getAdapter()==null){
+                    return;
+                }
+
+                boolean lastItem = (firstVisibleItem + visibleItemCount == totalItemCount);
+                //boolean moreRows = lvGuiasProductos.getAdapter().getCount() < datasource.getSize();
+
+                if (btnBuscarGuia.isEnabled() && lastItem) { // && moreRows
+                    //loading = true;
+                    //getListView().addFooterView(footerView, null, false);
+                    pagina++;
+                    buscarGuia(pagina);
+                }
+            }
+        });
+
         //spinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cia_array, R.layout.spinner_cia_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        Button btnBuscar = (Button) findViewById(R.id.btnBuscarGuia);
-        btnBuscar.setOnClickListener(this);
-        ImageButton btnBuscarContacto = (ImageButton) findViewById(R.id.btnBuscarContacto);
-        btnBuscarContacto.setOnClickListener(this);
+        btnBuscarGuia = (Button) findViewById(R.id.btnBuscarGuia);
+        btnBuscarGuia.setOnClickListener(this);
+        //ImageButton btnBuscarContacto = (ImageButton) findViewById(R.id.btnBuscarContacto);
+        //btnBuscarContacto.setOnClickListener(this);
     }
 
-    private void buscarGuia(){
-        /*String buscar = txtBuscarContacto.getText().toString().trim();
-
-        if(buscar.isEmpty()) {
-            Toast.makeText(this, "Debe imgresar un nombre", Toast.LENGTH_SHORT).show();
-            lvResultadoContacto.setAdapter(null);
-        }else{
-            Util.hideKeyboard(txtBuscarContacto);
-            mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Buscando...");
-            if(!mDialog.isShowing()){
-                mDialog.show();
+    private void buscarGuia(int pagina){
+        String numeroGuia = txtNumeroGuia.getText().toString().trim();
+        if(numeroGuia.isEmpty()){
+            numeroGuia = "all";
+        }
+        int ciaId = 0, contactoId = 0;
+        ciaId = spinner.getSelectedItemPosition()+1;
+        if(objContacto!=null){
+            try {
+                contactoId = objContacto.getInt("id");
+            } catch (JSONException e) {
+                Log.e("JSONException", e.getMessage());
             }
-            HttpUtil.get(Global.URL_GUIA_LISTAR.replace("{nombreContacto}", buscar), new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                    if (mDialog.isShowing()) {
-                        mDialog.dismiss();
-                    }
-                    try {
-                        JSONObject objResponse = Util.getJson(response);
-                        JSONArray data = objResponse.getJSONArray("data");
-                        if(data.length()==0) {
-                            Toast.makeText(ContactoActivity.this, objResponse.getString("message"), Toast.LENGTH_LONG).show();
-                        }else if(data.length()>=1) {
-                            lvResultadoContacto.setAdapter(new ContactosAdapter(ContactoActivity.this, data));
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+        }
+        btnBuscarGuia.setEnabled(false);
+        lvGuiasProductos.addFooterView(footerView, null, false);
+        if(pagina==0) {
+            lvGuiasProductos.setAdapter(null);
+        }
+        Util.hideKeyboard(txtNumeroGuia);
+        cargarGuias(ciaId+"", contactoId+"", numeroGuia, pagina);
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                    if (mDialog.isShowing()) {
-                        mDialog.dismiss();
+    }
+
+    private void cargarGuias(String ciaId, String contactoId, String numeroGuia, final int pagina){
+        HttpUtil.get(Global.URL_GUIA_LISTAR.replace("{ciaId}", ciaId).replace("{contactoId}", contactoId).replace("{numeroGuia}", numeroGuia).replace("{pagina}", pagina+""), new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                btnBuscarGuia.setEnabled(true);
+                try {
+                    JSONObject objResponse = Util.getJson(response);
+                    JSONArray data = objResponse.getJSONArray("data");
+                    if(data.length()==0) {
+                        Toast.makeText(GuiaActivity.this, objResponse.getString("message"), Toast.LENGTH_LONG).show();
+                    }else if(data.length()>=1) {
+                        if(pagina==0) {
+                            mGuiasAdapter = new GuiasAdapter(GuiaActivity.this, data);
+                            lvGuiasProductos.setAdapter(mGuiasAdapter);
+                        }else{
+                            for (int i = 0; i < data.length(); i++){
+                                JSONObject obj = data.getJSONObject(i);
+                                mGuiasAdapter.addItem(obj);
+                                mGuiasAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        lvGuiasProductos.removeFooterView(footerView);
                     }
-                    Util.showLoginview(ContactoActivity.this);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
-        }*/
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                try {
+                    String data = Util.getString(errorResponse);
+                    if(data.equals("Unauthorized Access")) {
+                        Util.showLoginview(GuiaActivity.this);
+                    }else{
+                        Log.e("onFailure", data.toString());
+                    }
+                } catch (JSONException e1) {
+                    Log.e("JSONException", e1.getMessage());
+                }
+            }
+        });
     }
 
     private void limpiar(){
@@ -108,6 +169,8 @@ public class GuiaActivity extends AppCompatActivity implements View.OnClickListe
         txtContacto.setText("");
         spinner.setSelection(0);
         objContacto = null;
+        lvGuiasProductos.setAdapter(null);
+        pagina = 0;
     }
 
     @Override
@@ -119,11 +182,18 @@ public class GuiaActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             case R.id.guia_limpiar:
                 limpiar();
                 return true;
+            case R.id.guia_buscar_contacto:
+                Intent i = new Intent(this, ContactoActivity.class);
+                i.putExtra("back", true);
+                startActivityForResult(i, 1);
+                Util.entrar(this);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -132,12 +202,7 @@ public class GuiaActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.btnBuscarGuia){
-            //Toast.makeText(this, txtNumeroGuia.getText().toString(), Toast.LENGTH_LONG).show();
-            Toast.makeText(this, spinner.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
-            //buscarGuia();
-        }else if(v.getId()==R.id.btnBuscarContacto){
-            Intent i = new Intent(this, ContactoActivity.class);
-            startActivityForResult(i, 1);
+            buscarGuia(pagina);
         }
     }
 
@@ -149,7 +214,9 @@ public class GuiaActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     objContacto = new JSONObject(result);
                     txtContacto.setText(objContacto.getString("alias"));
-                    Log.e("RESULT", objContacto.getInt("id")+"");
+                    pagina = 0;
+                    buscarGuia(pagina);
+                    //Log.e("RESULT", objContacto.getInt("id")+"");
                 } catch (JSONException e) {
                     Log.e("JSONException", e.getMessage());
                 }
@@ -160,16 +227,25 @@ public class GuiaActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        overridePendingTransition(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
-
+    public void onBackPressed() {
+        super.onBackPressed();
+        Util.salir(this);
+        finish();
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.overridePendingTransition(R.animator.anim_slide_in_right, R.animator.anim_slide_out_right);
-        finish();
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Object json = parent.getItemAtPosition(position);
+        //try {
+            //Log.e("json.toString()", json.toString());
+            //JSONObject data = new JSONObject(json.toString());
+            Intent intent = new Intent(this, GuiaResumenActivity.class);
+            //intent.putExtra("id", data.getInt("id"));
+            intent.putExtra("json", json.toString());
+            startActivity(intent);
+            Util.entrar(this);
+        /*} catch (JSONException e) {
+            e.printStackTrace();
+        }*/
     }
 }

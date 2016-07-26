@@ -12,8 +12,6 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
         android:stretchColumns="1">
 
         <TableRow
@@ -31,8 +29,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txtNumeroGuia"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginLeft="10dp"
-                android:layout_span="2" />
+                android:layout_marginLeft="10dp" />
         </TableRow>
         <TableRow
             android:layout_width="wrap_content"
@@ -49,8 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spCia"
-                android:layout_marginLeft="10dp"
-                android:layout_span="2" />
+                android:layout_marginLeft="10dp" />
         </TableRow>
 
         <TableRow
@@ -63,19 +59,13 @@
                 android:layout_height="wrap_content"
                 android:text="Contacto:"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtContacto"
                 android:layout_marginLeft="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnBuscarContacto"
-                android:layout_marginLeft="10dp"
-                android:src="@android:drawable/ic_menu_search" />
         </TableRow>
 
         <TableRow
@@ -86,17 +76,17 @@
             <Button
                 android:text="@string/lbl_buscar"
                 android:id="@+id/btnBuscarGuia"
-                android:layout_span="3" />
+                android:layout_span="2" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp">
+            android:layout_height="match_parent">
 
             <ListView android:id="@+id/lvGuiasProductos"
                 android:layout_column="0"
-                android:layout_span="3" />
+                android:layout_span="2"
+                android:drawSelectorOnTop="false"/>
         </TableRow>
 
     </TableLayout>

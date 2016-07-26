@@ -2,11 +2,13 @@ package com.ww.gorrion;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,17 +35,16 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
 
     private EditText txtSerie;
     private Switch swSerieExacta;
-    private ProgressDialog mDialog;
+    //private ProgressDialog mDialog;
     private ListView lvProductoResultado;
+    private View footerView;
+    Button btnBuscar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_producto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (savedInstanceState == null) {
-            overridePendingTransition(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
-        }
 
         txtSerie = (EditText) findViewById(R.id.txtSerie);
         txtSerie.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -54,9 +55,10 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
             }
         });
         swSerieExacta = (Switch) findViewById(R.id.swSerieExacta);
-        Button btnBuscar = (Button) findViewById(R.id.btnBuscar);
+        btnBuscar = (Button) findViewById(R.id.btnBuscar);
         btnBuscar.setOnClickListener(this);
         lvProductoResultado = (ListView) findViewById(R.id.lvProductoResultado);
+        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_guias_footer, null, false);
         lvProductoResultado.setOnItemClickListener(this);
     }
 
@@ -70,19 +72,23 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Debe imgresar una serie", Toast.LENGTH_SHORT).show();
             lvProductoResultado.setAdapter(null);
         }else{
+            btnBuscar.setEnabled(false);
+            lvProductoResultado.addFooterView(footerView, null, false);
+            lvProductoResultado.setAdapter(null);
             Util.hideKeyboard(txtSerie);
-            mDialog = new ProgressDialog(this);
+            /*mDialog = new ProgressDialog(this);
             mDialog.setMessage("Buscando...");
             if(!mDialog.isShowing()){
                 mDialog.show();
-            }
+            }*/
             HttpUtil.get(Global.URL_PRODUCTO_LISTAR.replace("{serie}", serie).replace("{serieExacta}", serieExacta),  new AsyncHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                    if (mDialog.isShowing()) {
+                    /*if (mDialog.isShowing()) {
                         mDialog.dismiss();
-                    }
+                    }*/
+                    btnBuscar.setEnabled(true);
                     try {
                         JSONObject data = Util.getJson(response);
                         addResult(data);
@@ -93,9 +99,9 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                    if (mDialog.isShowing()) {
+                    /*if (mDialog.isShowing()) {
                         mDialog.dismiss();
-                    }
+                    }*/
                     try {
                         String data = Util.getString(errorResponse);
                         if(data.equals("Unauthorized Access")) {
@@ -121,6 +127,7 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
         }else if(data.length()>1) {
             lvProductoResultado.setAdapter(new ProductosAdapter(this, data));
         }
+        lvProductoResultado.removeFooterView(footerView);
     }
 
     @Override
@@ -142,9 +149,10 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void startProductoActivity(int id){
-        Intent intent = new Intent(this, ProductoResultadoActivity.class);
-        intent.putExtra("id", id);
-        startActivity(intent);
+        Intent i = new Intent(this, ProductoResultadoActivity.class);
+        i.putExtra("id", id);
+        startActivity(i);
+        Util.entrar(this);
     }
 
     @Override
@@ -160,7 +168,7 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.animator.anim_slide_in_right, R.animator.anim_slide_out_right);
+        Util.salir(this);
         finish();
     }
 }
