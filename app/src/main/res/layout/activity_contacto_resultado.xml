@@ -9,36 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ww.gorrion.ContactoResultadoActivity">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
         <TableLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:stretchColumns="1" >
+            android:layout_height="wrap_content">
 
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Alias:"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/lblAlias"
-                    android:textSize="18dp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -86,7 +63,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/lblDireccion"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:inputType="textMultiLine"
+                    android:singleLine="false" />
             </TableRow>
 
             <TableRow
@@ -142,19 +121,7 @@
                     android:id="@+id/lblDepartamento"
                     android:textSize="18dp" />
             </TableRow>
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_mapa"
-                    android:id="@+id/btnMapa"
-                    android:layout_span="2" />
-
-            </TableRow>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -166,7 +133,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="#FFFFFF"/>
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/lvContactoPersona"/>
         </TableLayout>
-    </ScrollView>
 
 </RelativeLayout>

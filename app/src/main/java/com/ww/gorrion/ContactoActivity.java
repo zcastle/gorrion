@@ -1,12 +1,10 @@
 package com.ww.gorrion;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -58,7 +56,7 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
         btnBuscarContacto = (Button) findViewById(R.id.btnBuscarContacto);
         btnBuscarContacto.setOnClickListener(this);
         lvResultadoContacto = (ListView) findViewById(R.id.lvResultadoContacto);
-        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_guias_footer, null, false);
+        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_loader, null, false);
         lvResultadoContacto.setOnItemClickListener(this);
     }
 
@@ -77,6 +75,7 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                     btnBuscarContacto.setEnabled(true);
+                    lvResultadoContacto.removeFooterView(footerView);
                     try {
                         JSONObject objResponse = Util.getJson(response);
                         JSONArray data = objResponse.getJSONArray("data");
@@ -84,7 +83,6 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(ContactoActivity.this, objResponse.getString("message"), Toast.LENGTH_LONG).show();
                         }else if(data.length()>=1) {
                             lvResultadoContacto.setAdapter(new ContactosAdapter(ContactoActivity.this, data));
-                            lvResultadoContacto.removeFooterView(footerView);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

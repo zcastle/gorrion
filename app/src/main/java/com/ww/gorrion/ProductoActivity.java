@@ -1,7 +1,5 @@
 package com.ww.gorrion;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,7 +56,7 @@ public class ProductoActivity extends AppCompatActivity implements View.OnClickL
         btnBuscar = (Button) findViewById(R.id.btnBuscar);
         btnBuscar.setOnClickListener(this);
         lvProductoResultado = (ListView) findViewById(R.id.lvProductoResultado);
-        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_guias_footer, null, false);
+        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_loader, null, false);
         lvProductoResultado.setOnItemClickListener(this);
     }
 

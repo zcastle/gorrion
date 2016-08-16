@@ -1,6 +1,7 @@
 package com.ww.gorrion.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class LauncherAdapter extends BaseAdapter {
             LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             v = vi.inflate(R.layout.launcher_iem, null);
+            //v.setBackgroundColor(Color.GREEN);
             holder = new ViewHolder();
             holder.text = (TextView) v.findViewById(R.id.lacuncher_icon_text);
             holder.icon = (ImageView) v.findViewById(R.id.lacuncher_icon_img);

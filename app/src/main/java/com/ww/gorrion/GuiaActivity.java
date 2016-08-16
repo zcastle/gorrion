@@ -1,7 +1,6 @@
 package com.ww.gorrion;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -59,7 +56,7 @@ public class GuiaActivity extends AppCompatActivity implements View.OnClickListe
         txtContacto = (TextView) findViewById(R.id.txtContacto);
         spinner = (Spinner) findViewById(R.id.spCia);
         lvGuiasProductos = (ListView) findViewById(R.id.lvGuiasProductos);
-        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_guias_footer, null, false);
+        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_loader, null, false);
         lvGuiasProductos.setAdapter(null);
         lvGuiasProductos.setOnItemClickListener(this);
         lvGuiasProductos.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -194,6 +191,7 @@ public class GuiaActivity extends AppCompatActivity implements View.OnClickListe
                 i.putExtra("back", true);
                 startActivityForResult(i, 1);
                 Util.entrar(this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -30,7 +30,7 @@ public class GuiaResumenActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ListView lvGuiasResumen = (ListView) findViewById(R.id.lvGuiasResumen);
-        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_guias_footer, null, false);
+        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_loader, null, false);
         lvGuiasResumen.addFooterView(footerView, null, false);
 
         String json = getIntent().getStringExtra("json");

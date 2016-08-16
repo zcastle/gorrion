@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/listview_padding"
+    android:paddingBottom="@dimen/listview_padding" >
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="01-01-2016"
+        android:id="@+id/tvFacturaFecha"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="007-202016"
+        android:id="@+id/tvFacturaNumero"
+        android:layout_below="@+id/tvFacturaFecha"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="OC: 000142"
+        android:id="@+id/tvFacturaOrden"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="100.00"
+        android:id="@+id/tvFacturaMonto"
+        android:layout_below="@+id/tvFacturaOrden"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="S/."
+        android:id="@+id/tvFacturaMoneda"
+        android:layout_alignTop="@+id/tvFacturaMonto"
+        android:layout_toLeftOf="@+id/tvFacturaMonto"
+        android:layout_toStartOf="@+id/tvFacturaMonto" />
+
+</RelativeLayout>
