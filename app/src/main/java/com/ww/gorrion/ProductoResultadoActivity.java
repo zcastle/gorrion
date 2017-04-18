@@ -97,20 +97,34 @@ public class ProductoResultadoActivity extends AppCompatActivity {
         lblTipo.setText(row.getString("tipo"));
         lblPadre.setText(row.getString("padre"));
 
-        JSONObject guia = row.getJSONObject("guia");
-        if(guia.length()>0){
-            lblGuia.setText(guia.getString("numero"));
-            lblGuiaTipo.setText(guia.getString("tipo"));
-            lblFecha.setText(guia.getString("fecha"));
-            lblCliente.setText(guia.getString("cliente"));
+        if(Global.ROL_ACTIVE==Global.ROL_CLIENTE){
+            lblFecha.setText("");
+            lblGuia.setText("");
+            lblGuiaTipo.setText("");
+            lblCliente.setText("");
+        }else{
+            JSONObject guia = row.getJSONObject("guia");
+            if(guia.length()>0){
+                lblFecha.setText(guia.getString("fecha"));
+                lblGuia.setText(guia.getString("numero"));
+                lblGuiaTipo.setText(guia.getString("tipo"));
+                lblCliente.setText(guia.getString("cliente"));
+            }
         }
 
-        JSONObject compra = row.getJSONObject("compra");
-        if(compra.length()>0){
-            lblCompraFecha.setText(compra.getString("fecha"));
-            lblCompraNumero.setText(compra.getString("numero"));
-            lblCompraGuia.setText(compra.getString("guia"));
-            lblCompraProveedor.setText(compra.getString("proveedor"));
+        if(Global.ROL_ACTIVE==Global.ROL_CLIENTE){
+            lblCompraFecha.setText("");
+            lblCompraNumero.setText("");
+            lblCompraGuia.setText("");
+            lblCompraProveedor.setText("");
+        }else{
+            JSONObject compra = row.getJSONObject("compra");
+            if(compra.length()>0){
+                lblCompraFecha.setText(compra.getString("fecha"));
+                lblCompraNumero.setText(compra.getString("numero"));
+                lblCompraGuia.setText(compra.getString("guia"));
+                lblCompraProveedor.setText(compra.getString("proveedor"));
+            }
         }
 
         JSONArray comp = row.getJSONArray("componentes");

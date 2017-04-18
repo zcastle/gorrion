@@ -102,6 +102,15 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     JSONObject data = Util.getJson(response);
                     String token = data.getString("token");
+                    int rol = Global.ROL_CLIENTE;
+                    try{
+                        rol = data.getInt("rol");
+                    }catch(Exception e){
+                        rol = Global.ROL_CLIENTE;
+                    }finally {
+                        Global.ROL_ACTIVE = rol;
+                    }
+
                     manager.setToken(LoginActivity.this, token);
                     Intent intent = new Intent(LoginActivity.this, LauncherActivity.class);
                     startActivity(intent);

@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ListView;
 
 import com.ww.gorrion.adapter.LauncherAdapter;
+import com.ww.gorrion.common.Global;
 import com.ww.gorrion.common.LauncherIcon;
 import com.ww.gorrion.common.SessionManager;
 import com.ww.gorrion.common.Util;
@@ -21,6 +24,11 @@ public class LauncherActivity extends AppCompatActivity implements ListView.OnIt
 
     GridView gvDash;
     private SessionManager manager;
+
+    static final LauncherIcon[] ICONS_CLIENTE = {
+            new LauncherIcon(R.drawable.ic_laptop_white_48dp, LauncherIcon.LAUNCHER_PRODUCTO),
+            new LauncherIcon(R.drawable.ic_exit_to_app_white_48dp, LauncherIcon.LAUNCHER_CERRAR)
+    };
 
     static final LauncherIcon[] ICONS = {
             new LauncherIcon(R.drawable.ic_laptop_white_48dp, LauncherIcon.LAUNCHER_PRODUCTO),
@@ -37,8 +45,22 @@ public class LauncherActivity extends AppCompatActivity implements ListView.OnIt
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         gvDash = (GridView) findViewById(R.id.gvDash);
-        gvDash.setAdapter(new LauncherAdapter(this, ICONS));
+        if(Global.ROL_ACTIVE==Global.ROL_CLIENTE){
+            gvDash.setAdapter(new LauncherAdapter(this, ICONS_CLIENTE));
+        }else{
+            gvDash.setAdapter(new LauncherAdapter(this, ICONS));
+        }
+
         gvDash.setOnItemClickListener(this);
         manager = new SessionManager();
     }
